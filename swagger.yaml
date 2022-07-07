@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: 'for tap'
-  version: '0.0.2'
+  version: '0.0.3'
   title: 'Okaimono'
 consumes:
   - application/json
