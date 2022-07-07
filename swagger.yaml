@@ -1,1 +1,41 @@
-hoge
+swagger: '2.0'
+info:
+  description: 'for tap'
+  version: '0.0.2'
+  title: 'Okaimono'
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /card:
+    post:
+      summary: '会員証を新規に発行するAPI'
+      responses:
+        '201':
+          description: '成功時'
+          headers:
+            location:
+              description: '発行された会員証のURL: /card/${memberId}'
+              type: string
+          schema:
+            $ref: '#/definitions/Member'
+        default:
+          description: '失敗時'
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Error:
+    type: object
+    properties: 
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+  Member:
+    type: object
+    properties: 
+      memberId:
+        type: string
+              
