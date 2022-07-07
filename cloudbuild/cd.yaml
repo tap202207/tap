@@ -1,25 +1,44 @@
 steps:
-- name: 'gcr.io/k8s-skaffold/pack'
-  dir: 'server'
-  entrypoint: 'pack'
-  args:
-  - 'build'
-  - '--builder'
-  - 'gcr.io/buildpacks/builder:v1'
-  - '--publish'
-  - 'asia-docker.pkg.dev/okaimono-app-prototype/d/okaimono-lite:$COMMIT_SHA'
-- name: 'gcr.io/cloud-builders/gcloud-slim'
-  dir: 'server'
-  args:
-  - 'run'
-  - 'deploy'
-  - 'stg-okaimono-light'
-  - '--update-env-vars'
-  - 'HOST=0.0.0.0'
-  - '--image'
-  - 'asia-docker.pkg.dev/okaimono-app-prototype/d/okaimono-lite:$COMMIT_SHA'
-  - '--allow-unauthenticated'
-  - '--region'
-  - 'asia-northeast1'
+  - name: gcr.io/k8s-skaffold/pack
+    args:
+      - build
+      - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+      - '--builder=gcr.io/buildpacks/builder:v1'
+      - '--network=cloudbuild'
+      - '--path=.'
+    id: Buildpack
+    entrypoint: pack
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+    id: Push
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    args:
+      - run
+      - services
+      - update
+      - $_SERVICE_NAME
+      - '--platform=managed'
+      - '--image=$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+      - >-
+        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID,$_LABELS
+      - '--region=$_DEPLOY_REGION'
+      - '--quiet'
+    id: Deploy
+    entrypoint: gcloud
+images:
+  - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
 options:
-  logging: CLOUD_LOGGING_ONLY
+  substitutionOption: ALLOW_LOOSE
+substitutions:
+  _LABELS: gcb-trigger-id=3854c241-005f-4126-8d7d-34bd71c332de
+  _TRIGGER_ID: 3854c241-005f-4126-8d7d-34bd71c332de
+  _GCR_HOSTNAME: asia.gcr.io
+  _PLATFORM: managed
+  _SERVICE_NAME: tap
+  _DEPLOY_REGION: asia-northeast1
+tags:
+  - gcp-cloud-build-deploy-cloud-run
+  - gcp-cloud-build-deploy-cloud-run-managed
+  - tap
