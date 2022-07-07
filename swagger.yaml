@@ -24,6 +24,18 @@ paths:
           description: '失敗時'
           schema:
             $ref: '#/definitions/Error'
+      parameters:
+        - in: body
+          name: RegisterMemberRequest
+          schema: 
+            type: object
+            required:
+              - companyId
+            properties: 
+              companyId:
+                type: string
+      operationId: CreateMembershipCard
+      
 definitions:
   Error:
     type: object
