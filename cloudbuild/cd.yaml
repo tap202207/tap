@@ -1,0 +1,25 @@
+steps:
+- name: 'gcr.io/k8s-skaffold/pack'
+  dir: 'server'
+  entrypoint: 'pack'
+  args:
+  - 'build'
+  - '--builder'
+  - 'gcr.io/buildpacks/builder:v1'
+  - '--publish'
+  - 'asia-docker.pkg.dev/okaimono-app-prototype/d/okaimono-lite:$COMMIT_SHA'
+- name: 'gcr.io/cloud-builders/gcloud-slim'
+  dir: 'server'
+  args:
+  - 'run'
+  - 'deploy'
+  - 'stg-okaimono-light'
+  - '--update-env-vars'
+  - 'HOST=0.0.0.0'
+  - '--image'
+  - 'asia-docker.pkg.dev/okaimono-app-prototype/d/okaimono-lite:$COMMIT_SHA'
+  - '--allow-unauthenticated'
+  - '--region'
+  - 'asia-northeast1'
+options:
+  logging: CLOUD_LOGGING_ONLY
