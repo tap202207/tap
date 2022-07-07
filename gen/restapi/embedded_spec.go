@@ -28,7 +28,7 @@ func init() {
   "info": {
     "description": "for tap",
     "title": "Okaimono",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   "paths": {
     "/card": {
@@ -109,7 +109,7 @@ func init() {
   "info": {
     "description": "for tap",
     "title": "Okaimono",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   "paths": {
     "/card": {
