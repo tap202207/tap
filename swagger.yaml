@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   description: 'for tap'
-  version: '0.0.3'
+  version: '0.0.4'
   title: 'Okaimono'
 consumes:
   - application/json
@@ -35,7 +35,24 @@ paths:
               companyId:
                 type: string
       operationId: CreateMembershipCard
-      
+  /card/{memberId}:
+    get:
+      summary: '会員証をバーコードで取得するAPI'
+      responses:
+        '200':
+          description: '成功時'
+          schema:
+            $ref: '#/definitions/Barcode'
+        default:
+          description: '失敗時'
+          schema:
+            $ref: '#/definitions/Error'
+      parameters:
+        - name: memberId
+          in: path
+          required: true
+          type: string
+      operationId: GetMembershipCard
 definitions:
   Error:
     type: object
@@ -50,4 +67,14 @@ definitions:
     properties: 
       memberId:
         type: string
-              
+  Barcode:
+    type: object
+    required:
+      - barcode
+      - token
+    properties: 
+      barcode:
+        type: string
+      token:
+        type: string
+
