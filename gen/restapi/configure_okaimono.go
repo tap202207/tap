@@ -11,6 +11,7 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 
 	"github.com/tap202207/tap/gen/restapi/handlers"
+	"github.com/tap202207/tap/handler"
 )
 
 //go:generate swagger generate server --target ..\..\gen --name Okaimono --spec ..\..\swagger.yaml --api-package handlers --principal interface{}
@@ -42,6 +43,10 @@ func configureAPI(api *handlers.OkaimonoAPI) http.Handler {
 			return middleware.NotImplemented("operation handlers.CreateMembershipCard has not yet been implemented")
 		})
 	}
+
+	api.GetMembershipCardHandler = handlers.GetMembershipCardHandlerFunc(
+		handler.GetMembershipCard,
+	)
 
 	api.PreServerShutdown = func() {}
 
