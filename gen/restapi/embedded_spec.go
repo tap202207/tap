@@ -28,7 +28,7 @@ func init() {
   "info": {
     "description": "for tap",
     "title": "Okaimono",
-    "version": "0.0.3"
+    "version": "0.0.4"
   },
   "paths": {
     "/card": {
@@ -73,9 +73,52 @@ func init() {
           }
         }
       }
+    },
+    "/card/{memberId}": {
+      "get": {
+        "summary": "会員証をバーコードで取得するAPI",
+        "operationId": "GetMembershipCard",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "memberId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功時",
+            "schema": {
+              "$ref": "#/definitions/Barcode"
+            }
+          },
+          "default": {
+            "description": "失敗時",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
+    "Barcode": {
+      "type": "object",
+      "required": [
+        "barcode",
+        "token"
+      ],
+      "properties": {
+        "barcode": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
     "Error": {
       "type": "object",
       "properties": {
@@ -109,7 +152,7 @@ func init() {
   "info": {
     "description": "for tap",
     "title": "Okaimono",
-    "version": "0.0.3"
+    "version": "0.0.4"
   },
   "paths": {
     "/card": {
@@ -154,9 +197,52 @@ func init() {
           }
         }
       }
+    },
+    "/card/{memberId}": {
+      "get": {
+        "summary": "会員証をバーコードで取得するAPI",
+        "operationId": "GetMembershipCard",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "memberId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功時",
+            "schema": {
+              "$ref": "#/definitions/Barcode"
+            }
+          },
+          "default": {
+            "description": "失敗時",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
+    "Barcode": {
+      "type": "object",
+      "required": [
+        "barcode",
+        "token"
+      ],
+      "properties": {
+        "barcode": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
     "Error": {
       "type": "object",
       "properties": {

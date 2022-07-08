@@ -45,6 +45,9 @@ func NewOkaimonoAPI(spec *loads.Document) *OkaimonoAPI {
 		CreateMembershipCardHandler: CreateMembershipCardHandlerFunc(func(params CreateMembershipCardParams) middleware.Responder {
 			return middleware.NotImplemented("operation CreateMembershipCard has not yet been implemented")
 		}),
+		GetMembershipCardHandler: GetMembershipCardHandlerFunc(func(params GetMembershipCardParams) middleware.Responder {
+			return middleware.NotImplemented("operation GetMembershipCard has not yet been implemented")
+		}),
 	}
 }
 
@@ -83,6 +86,8 @@ type OkaimonoAPI struct {
 
 	// CreateMembershipCardHandler sets the operation handler for the create membership card operation
 	CreateMembershipCardHandler CreateMembershipCardHandler
+	// GetMembershipCardHandler sets the operation handler for the get membership card operation
+	GetMembershipCardHandler GetMembershipCardHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -162,6 +167,9 @@ func (o *OkaimonoAPI) Validate() error {
 
 	if o.CreateMembershipCardHandler == nil {
 		unregistered = append(unregistered, "CreateMembershipCardHandler")
+	}
+	if o.GetMembershipCardHandler == nil {
+		unregistered = append(unregistered, "GetMembershipCardHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -255,6 +263,10 @@ func (o *OkaimonoAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/card"] = NewCreateMembershipCard(o.context, o.CreateMembershipCardHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/card/{memberId}"] = NewGetMembershipCard(o.context, o.GetMembershipCardHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP
