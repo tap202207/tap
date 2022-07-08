@@ -1,4 +1,4 @@
 steps:
 - name: gcr.io/cloud-builders/go
-  env: ['PROJECT_ROOT=./']
+  env: ['PROJECT_ROOT=tap']
   args: ['test','./...']
